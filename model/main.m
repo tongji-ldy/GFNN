@@ -38,7 +38,7 @@ yn_test = yn(testInd,:);
 
 fprintf('\nInitializing Neural Network Parameters ...\n')
 
-initial_Theta1 = randInitializeWeights(input_layer_size, hidden_layer_size);
+initial_Theta1 = randInitializeWeights((input_layer_size+1)*2-1, hidden_layer_size);
 initial_Theta2 = randInitializeWeights(hidden_layer_size, output_layer_size);
 
 % Unroll parameters
@@ -59,7 +59,7 @@ pause;
 fprintf('\nTraining Neural Network... \n')
 
 %  传播迭代次数
-options = optimset('MaxIter', 10000);
+options = optimset('MaxIter', 1000);
 
 %  正则化参数
 lambda =0;
@@ -77,10 +77,10 @@ costFunction = @(p) nnCostFunction(p, ...
 %[nn_params, cost] = gradientDescent(costFunction, initial_nn_params, options);
 
 % Obtain Theta1 and Theta2 back from nn_params
-Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...
-                 hidden_layer_size, (input_layer_size + 1));
+Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)*2), ...
+                 hidden_layer_size, (input_layer_size + 1)*2);
 
-Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), ...
+Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1)*2)):end), ...
                  output_layer_size, (hidden_layer_size + 1));
 
 fprintf('Program paused. Press enter to continue.\n');

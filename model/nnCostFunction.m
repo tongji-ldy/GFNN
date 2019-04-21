@@ -12,19 +12,19 @@ function [J, grad] = nnCostFunction(nn_params, ...
 
 % Reshape nn_params back into the parameters Theta1 and Theta2, the weight matrices
 % for our 2 layer neural network
-Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)), ...
-                 hidden_layer_size, (input_layer_size + 1));
+Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)*2), ...
+                 hidden_layer_size, (input_layer_size + 1)*2);
 
-Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1))):end), ...
+Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1)*2)):end), ...
                  output_layer_size, (hidden_layer_size + 1));
 
 % Setup some useful variables
 m = size(X, 1);
 
 % You need to return the following variables correctly
-J = 0;
-Theta1_grad = zeros(size(Theta1));
-Theta2_grad = zeros(size(Theta2));
+% J = 0;
+% Theta1_grad = zeros(size(Theta1));
+% Theta2_grad = zeros(size(Theta2));
 
 % Part 1: Feedforward the neural network and return the cost in the
 %         variable J. 
@@ -32,11 +32,30 @@ Theta2_grad = zeros(size(Theta2));
 %当输入为X时，计算神经网络中每一层的输出值（输出层的输出为a3）。
 X = [ones(m,1) X];%加上偏置项bias unit
 a1 = X;
-z2 = a1*Theta1';
-a2 = sigmoid(z2);
+x_aver = Theta1(:,1:2:end);
+sigma = Theta1(:,2:2:end);
+
+z2 = zeros(m,hidden_layer_size);
+for i=1:m
+    for j=1:hidden_layer_size
+        z2(i,j) = prod(exp(-(a1(i,:)-x_aver(j,:)).^2./sigma(j,:).^2),2);
+    end
+end
+
+theta = 0;
+% lamda = 0.7;
+a2 = zeros(m,hidden_layer_size);
+for i=1:m
+    for j=1:hidden_layer_size
+        if z2(i,j)-theta>=0
+            a2(i,j) = z2(i,j);
+        end
+    end
+end
+
 a2 = [ones(size(a2,1),1) a2];
 z3 = a2*Theta2';
-a3 = z3;
+a3 = z3./sum(a2,2);
 
 %计算CostFunction的输出值J：
 J = (a3 - y)'*(a3 - y)/(2*m);
@@ -47,11 +66,26 @@ J = (a3 - y)'*(a3 - y)/(2*m);
 Delta1 = zeros(size(Theta1));
 Delta2 = zeros(size(Theta2));
 
-delta3 = a3 - y;
-temp = delta3 * Theta2;
-delta2 = temp(:,2:end) .* sigmoidGradient(z2);
-Delta1 = Delta1 + delta2' * X;
-Delta2 = Delta2 + delta3' * a2;
+temp1 = zeros(size(Theta2));
+for k=1:m
+    for l=1:hidden_layer_size+1
+        temp1(l) = ((a3(k)-y(k))./sum(a2(k),2)).*a2(k,l);
+    end
+    Delta2 = Delta2 +temp1;
+end
+
+temp1 = zeros(size(Theta2));
+temp2 = zeros(size(Theta1));
+for k=1:m
+    for l=1:hidden_layer_size
+        temp1(l+1) = ((a3(k)-y(k))./sum(a2(k),2)).*a2(k,l+1).*(Theta2(l+1)-y(k));
+        for i=1:input_layer_size+1
+            temp2(l,i*2-1) = temp1(l+1).*2*(X(k,i)-x_aver(l,i))./sigma(l,i).^2;
+            temp2(l,i*2) = temp1(l+1).*2*(X(k,i)-x_aver(l,i)).^2./sigma(l,i).^3;
+        end
+    end
+    Delta1 = Delta1 +temp2;
+end
 
 Theta1_grad = 1/m * Delta1;
 Theta2_grad = 1/m * Delta2;
