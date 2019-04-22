@@ -41,6 +41,8 @@ fprintf('\nInitializing Neural Network Parameters ...\n')
 initial_Theta1 = randInitializeWeights((input_layer_size+1)*2-1, hidden_layer_size);
 initial_Theta2 = randInitializeWeights(hidden_layer_size, output_layer_size);
 
+initial_Theta1(:,2:2:end) = 0.8;%初始高斯函数宽度
+
 % Unroll parameters
 % initial_nn_params = [initial_Theta1(:) ; initial_Theta2(:)];
 
@@ -59,7 +61,7 @@ pause;
 fprintf('\nTraining Neural Network... \n')
 
 %  传播迭代次数
-options = optimset('MaxIter', 500);
+options = optimset('MaxIter', 5000);
 
 %  正则化参数
 lambda =0;
