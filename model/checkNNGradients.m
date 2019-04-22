@@ -12,7 +12,7 @@ if ~exist('lambda', 'var') || isempty(lambda)
     lambda = 0;
 end
 
-input_layer_size = 1;
+input_layer_size = 2;
 hidden_layer_size = 50;
 num_labels = 1;
 m = 5;
@@ -23,18 +23,17 @@ Theta2 = debugInitializeWeights(num_labels, hidden_layer_size);
 % Reusing debugInitializeWeights to generate X
 X  = debugInitializeWeights(m, input_layer_size - 1);
 y  = 1 + mod(1:m, num_labels)';
-% X  = X(1:m,:);
-% y  = y(1:m,:);
 
 % Unroll parameters
-nn_params = [Theta1(:) ; Theta2(:)];
+% nn_params = [Theta1(:) ; Theta2(:)];
 
 % Short hand for cost function
-costFunc = @(p) nnCostFunction(p, input_layer_size, hidden_layer_size, ...
+costFunc = @(p1, p2) nnCostFunction(p1, p2, input_layer_size, hidden_layer_size, ...
                                num_labels, X, y, lambda);
 
-[cost, grad] = costFunc(nn_params);
-numgrad = computeNumericalGradient(costFunc, nn_params);
+[~, Theta1_grad, Theta2_grad, ~] = costFunc(Theta1, Theta2);
+grad = [Theta1_grad(:) ; Theta2_grad(:)];
+numgrad = computeNumericalGradient(costFunc, Theta1, Theta2);
 
 % Visually examine the two gradient computations.  The two columns
 % you get should be very similar. 

@@ -1,4 +1,4 @@
-function [J, grad] = nnCostFunction(nn_params, ...
+function [J, Theta1_grad, Theta2_grad, z2] = nnCostFunction(Theta1, Theta2, ...
                                    input_layer_size, ...
                                    hidden_layer_size, ...
                                    output_layer_size, ...
@@ -12,19 +12,14 @@ function [J, grad] = nnCostFunction(nn_params, ...
 
 % Reshape nn_params back into the parameters Theta1 and Theta2, the weight matrices
 % for our 2 layer neural network
-Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)*2), ...
-                 hidden_layer_size, (input_layer_size + 1)*2);
-
-Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1)*2)):end), ...
-                 output_layer_size, (hidden_layer_size + 1));
+% Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)*2), ...
+%                  hidden_layer_size, (input_layer_size + 1)*2);
+% 
+% Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1)*2)):end), ...
+%                  output_layer_size, (hidden_layer_size + 1));
 
 % Setup some useful variables
 m = size(X, 1);
-
-% You need to return the following variables correctly
-% J = 0;
-% Theta1_grad = zeros(size(Theta1));
-% Theta2_grad = zeros(size(Theta2));
 
 % Part 1: Feedforward the neural network and return the cost in the
 %         variable J. 
@@ -42,12 +37,11 @@ for i=1:m
     end
 end
 
-theta = 0;
-% lamda = 0.7;
+theta_rule = 0.1;
 a2 = zeros(m,hidden_layer_size);
 for i=1:m
     for j=1:hidden_layer_size
-        if z2(i,j)-theta>=0
+        if z2(i,j)-theta_rule>=0
             a2(i,j) = z2(i,j);
         end
     end
@@ -99,6 +93,6 @@ Theta1_grad(:,2:end) = Theta1_grad(:,2:end) + lambda/m .* Theta1(:,2:end);
 Theta2_grad(:,2:end) = Theta2_grad(:,2:end) + lambda/m .* Theta2(:,2:end);
 
 % Unroll gradients
-grad = [Theta1_grad(:) ; Theta2_grad(:)];
+% grad = [Theta1_grad(:) ; Theta2_grad(:)];
 
 end

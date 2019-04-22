@@ -1,4 +1,4 @@
-function numgrad = computeNumericalGradient(J, theta)
+function numgrad = computeNumericalGradient(J, theta1, theta2)
 %COMPUTENUMERICALGRADIENT Computes the gradient using "finite differences"
 %and gives us a numerical estimate of the gradient.
 %   numgrad = COMPUTENUMERICALGRADIENT(J, theta) computes the numerical
@@ -11,19 +11,33 @@ function numgrad = computeNumericalGradient(J, theta)
 %        i-th input argument, evaluated at theta. (i.e., numgrad(i) should 
 %        be the (approximately) the partial derivative of J with respect 
 %        to theta(i).)
-%                
+%    
 
+perturb1 = zeros(size(theta1));
+perturb2 = zeros(size(theta2));
+theta = [theta1(:) ; theta2(:)];
 numgrad = zeros(size(theta));
-perturb = zeros(size(theta));
 e = 1e-4;
+[m, n] = size(theta1);
+max = m*n;
 for p = 1:numel(theta)
     % Set perturbation vector
-    perturb(p) = e;
-    loss1 = J(theta - perturb);
-    loss2 = J(theta + perturb);
+
+    if p <= max
+        perturb1(p) = e;
+    else
+        perturb2(p-max) = e;
+    end
+    
+    loss1 = J(theta1 - perturb1, theta2 - perturb2);
+    loss2 = J(theta1 + perturb1, theta2 + perturb2);
     % Compute Numerical Gradient
     numgrad(p) = (loss2 - loss1) / (2*e);
-    perturb(p) = 0;
+    if p <= max
+        perturb1(p) = 0;
+    else
+        perturb2(p-max) = 0;
+    end
 end
 
 end

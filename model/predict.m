@@ -5,19 +5,10 @@ function p = predict(Theta1, Theta2, X)
 
 % Useful values
 m = size(X, 1);
-num_labels = size(Theta2, 1);
+hidden_layer_size = size(Theta1, 1);   % 隐含层神经元数量
+output_layer_size = size(Theta2, 1);    % 输出层神经元数量
 
 % You need to return the following variables correctly 
-% p = zeros(size(X, 1), 1);
-% 
-% h1 = sigmoid([ones(m, 1) X] * Theta1');
-% h2 = [ones(m, 1) h1] * Theta2';
-% p = h2;
-
-input_layer_size  = 2;    % 输入层神经元数量
-hidden_layer_size = 50;   % 隐含层神经元数量
-output_layer_size = 1;    % 输出层神经元数量
-
 X = [ones(m,1) X];%加上偏置项bias unit
 a1 = X;
 x_aver = Theta1(:,1:2:end);
@@ -45,7 +36,7 @@ a2 = [ones(size(a2,1),1) a2];
 z3 = a2*Theta2';
 a3 = z3./sum(a2,2);
 
-p=a3;
+p = a3;
 
 % =========================================================================
 
