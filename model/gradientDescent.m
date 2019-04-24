@@ -26,7 +26,7 @@ for iter = 1:num_iters
         break; 
     end
     
-    if max(max(z2)) > lamda_rule
+    if sum(max(z2')')/size(Theta1,1) > lamda_rule
         if lamda_rule < 0.9
             lamda_rule = lamda_rule + delta_lamda;
         end

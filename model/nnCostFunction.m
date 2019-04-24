@@ -32,7 +32,7 @@ sigma = Theta1(:,2:2:end);
 
 z2 = zeros(m,hidden_layer_size);
 theta_rule = 0;
-a2 = zeros(m,hidden_layer_size);
+a2 = ones(m,hidden_layer_size);
 for i=1:m
     for j=1:hidden_layer_size
         z2(i,j) = prod(exp(-(a1(i,:)-x_aver(j,:)).^2./sigma(j,:).^2),2);
@@ -41,7 +41,7 @@ for i=1:m
         end
     end
 end
-
+    
 % a2 = [ones(size(a2,1),1) a2];
 z3 = a2*Theta2';
 a3 = z3./sum(a2,2);
