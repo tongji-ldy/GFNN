@@ -9,7 +9,7 @@ hidden_layer_size = size(Theta1, 1);   % 隐含层神经元数量
 output_layer_size = size(Theta2, 1);    % 输出层神经元数量
 
 % You need to return the following variables correctly 
-% X = [ones(m,1) X];%加上偏置项bias unit
+X = [ones(m,1) X];%加上偏置项bias unit
 a1 = X;
 x_aver = Theta1(:,1:2:end);
 sigma = Theta1(:,2:2:end);
@@ -32,7 +32,7 @@ for i=1:m
     end
 end
 
-% a2 = [ones(size(a2,1),1) a2];
+a2 = [ones(size(a2,1),1) a2];
 z3 = a2*Theta2';
 a3 = z3./sum(a2,2);
 

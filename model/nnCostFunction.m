@@ -25,7 +25,7 @@ m = size(X, 1);
 %         variable J. 
 
 %当输入为X时，计算神经网络中每一层的输出值（输出层的输出为a3）。
-% X = [ones(m,1) X];%加上偏置项bias unit
+X = [ones(m,1) X];%加上偏置项bias unit
 a1 = X;
 x_aver = Theta1(:,1:2:end);
 sigma = Theta1(:,2:2:end);
@@ -42,7 +42,7 @@ for i=1:m
     end
 end
     
-% a2 = [ones(size(a2,1),1) a2];
+a2 = [ones(size(a2,1),1) a2];
 z3 = a2*Theta2';
 a3 = z3./sum(a2,2);
 
@@ -55,18 +55,24 @@ J = (a3 - y)'*(a3 - y)/(2*m);
 Delta1 = zeros(size(Theta1));
 Delta2 = zeros(size(Theta2));
 temp1 = zeros(size(Theta2));
+for k=1:m
+    for l=1:hidden_layer_size+1
+        temp1(l) = ((a3(k)-y(k))./sum(a2(k),2)).*a2(k,l);
+    end
+    Delta2 = Delta2 +temp1;
+end
+
+temp1 = zeros(size(Theta2));
 temp2 = zeros(size(Theta1));
 for k=1:m
     for l=1:hidden_layer_size
-        temp1(l) = ((a3(k)-y(k))./sum(a2(k),2)).*a2(k,l);%此处修改前temp(l+1)、a2、Theta2(l+1)
-%         for i=1:input_layer_size+1
-        for i=1:input_layer_size
-            temp2(l,i*2-1) = temp1(l).*(Theta2(l)-y(k)).*2*(X(k,i)-x_aver(l,i))./sigma(l,i).^2;%此处修改前temp(l+1)
-            temp2(l,i*2) = temp1(l).*(Theta2(l)-y(k)).*2*(X(k,i)-x_aver(l,i)).^2./sigma(l,i).^3;
+        temp1(l+1) = ((a3(k)-y(k))./sum(a2(k),2)).*a2(k,l+1).*(Theta2(l+1)-y(k));
+        for i=1:input_layer_size+1
+            temp2(l,i*2-1) = temp1(l+1).*2*(X(k,i)-x_aver(l,i))./sigma(l,i).^2;
+            temp2(l,i*2) = temp1(l+1).*2*(X(k,i)-x_aver(l,i)).^2./sigma(l,i).^3;
         end
     end
     Delta1 = Delta1 +temp2;
-    Delta2 = Delta2 +temp1;
 end
 
 Theta1_grad = 1/m * Delta1;

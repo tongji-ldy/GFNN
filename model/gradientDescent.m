@@ -13,9 +13,9 @@ end
 alpha = 0.01;
 error = 0.00001;
 lamda_rule = 0.7;
-delta_lamda = 0.001;
-Theta1_add = randInitializeWeights(size(Theta1,2), 1);%此处修改了
-Theta2_add = randInitializeWeights(1, size(Theta2,1));%此处修改了
+delta_lamda = 0.0003;
+Theta1_add = randInitializeWeights(size(Theta1,2)-1, 1);%此处修改了
+Theta2_add = randInitializeWeights(1-1, size(Theta2,1));%此处修改了
 
 for iter = 1:num_iters
     [J, Theta1_grad, Theta2_grad, z2] = costFunction(Theta1, Theta2, hidden_layer_size);
@@ -32,7 +32,7 @@ for iter = 1:num_iters
         end
     else
         %增加神经元
-        if hidden_layer_size < 200
+        if hidden_layer_size < 100
             Theta1 = [Theta1 ; Theta1_add];
             Theta2 = [Theta2 , Theta2_add];
             Theta1_grad = [Theta1_grad ; zeros(size(Theta1_add))];
