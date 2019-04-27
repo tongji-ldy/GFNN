@@ -60,7 +60,7 @@ pause;
 fprintf('\nTraining Neural Network... \n')
 
 %  传播迭代次数
-options = optimset('MaxIter', 1000);
+options = optimset('MaxIter', 5000);
 
 %  正则化参数
 lambda =0;
@@ -74,7 +74,7 @@ costFunction = @(p1, p2, p3) nnCostFunction(p1, p2, input_layer_size, p3, ...
 
 %optimization method2:gradientDesent
 [Theta1, Theta2, cost] = gradientDescent(costFunction, initial_Theta1, initial_Theta2, ...
-                                         hidden_layer_size, options);
+                                         hidden_layer_size, options, Xn_train, yn_train);
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
