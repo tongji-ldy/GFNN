@@ -38,13 +38,12 @@ yn_test = yn(testInd,:);
 
 fprintf('\nInitializing Neural Network Parameters ...\n')
 
-initial_Theta1 = randInitializeWeights((input_layer_size+1)*2-1, hidden_layer_size);%此处改前*2-1
+initial_Theta1 = randInitializeWeights(input_layer_size*2, hidden_layer_size);
 initial_Theta2 = randInitializeWeights(hidden_layer_size, output_layer_size);
 
-%initial_Theta1(:,2:2:end) = 0.8;%初始高斯函数宽度
-
-% Unroll parameters
-% initial_nn_params = [initial_Theta1(:) ; initial_Theta2(:)];
+initial_Theta1(:,1) = mean(Xn_train(:,1));
+initial_Theta1(:,3) = mean(Xn_train(:,2));
+initial_Theta1(:,2:2:end) = 0.8;%初始高斯函数宽度
 
 %% =============== Part 3: Check Gradients ===============
 
@@ -61,16 +60,12 @@ pause;
 fprintf('\nTraining Neural Network... \n')
 
 %  传播迭代次数
-options = optimset('MaxIter', 5000);
+options = optimset('MaxIter', 1000);
 
 %  正则化参数
 lambda =0;
 
 % Create "short hand" for the cost function to be minimized
-% costFunction = @(p) nnCostFunction(p, ...
-%                                    input_layer_size, ...
-%                                    hidden_layer_size, ...
-%                                    output_layer_size, Xn_train, yn_train, lambda);
 costFunction = @(p1, p2, p3) nnCostFunction(p1, p2, input_layer_size, p3, ...
                                         output_layer_size, Xn_train, yn_train, lambda);
 
@@ -79,14 +74,7 @@ costFunction = @(p1, p2, p3) nnCostFunction(p1, p2, input_layer_size, p3, ...
 
 %optimization method2:gradientDesent
 [Theta1, Theta2, cost] = gradientDescent(costFunction, initial_Theta1, initial_Theta2, ...
-                                    hidden_layer_size, options);
-
-% Obtain Theta1 and Theta2 back from nn_params
-% Theta1 = reshape(nn_params(1:hidden_layer_size * (input_layer_size + 1)*2), ...
-%                  hidden_layer_size, (input_layer_size + 1)*2);
-% 
-% Theta2 = reshape(nn_params((1 + (hidden_layer_size * (input_layer_size + 1)*2)):end), ...
-%                  output_layer_size, (hidden_layer_size + 1));
+                                         hidden_layer_size, options);
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;

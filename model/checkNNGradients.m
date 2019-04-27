@@ -18,14 +18,11 @@ num_labels = 1;
 m = 5;
 
 % We generate some 'random' test data
-Theta1 = debugInitializeWeights(hidden_layer_size, (input_layer_size+1)*2-1);%此处修改了
+Theta1 = debugInitializeWeights(hidden_layer_size, input_layer_size*2);
 Theta2 = debugInitializeWeights(num_labels, hidden_layer_size);
 % Reusing debugInitializeWeights to generate X
-X  = debugInitializeWeights(m, input_layer_size-1);%此处修改了
+X  = debugInitializeWeights(m, input_layer_size);
 y  = 1 + mod(1:m, num_labels)';
-
-% Unroll parameters
-% nn_params = [Theta1(:) ; Theta2(:)];
 
 % Short hand for cost function
 costFunc = @(p1, p2) nnCostFunction(p1, p2, input_layer_size, hidden_layer_size, ...
