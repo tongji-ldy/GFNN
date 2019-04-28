@@ -32,6 +32,7 @@ for i=1:m
         end
     end
 end
+% a2 = sigmoid(z2);
 
 a3 = zeros(m,1);
 for i=1:m
@@ -42,6 +43,9 @@ for i=1:m
         a3(i) = Theta2(index);
     end
 end
+
+% z3 = a2*Theta2';
+% a3 = z3./sum(a2,2);
 
 %计算CostFunction的输出值J：
 J = (a3 - y)'*(a3 - y)/(2*m);
@@ -55,11 +59,19 @@ temp1 = zeros(size(Theta2));
 temp2 = zeros(size(Theta1));
 for k=1:m
     for l=1:hidden_layer_size
-        temp1(l) = ((a3(k)-y(k))./sum(a2(k,:),2)).*a2(k,l);
+        temp1(l) = (a3(k)-y(k))./sum(a2(k,:),2);
         for i=1:input_layer_size
-            temp2(l,i*2-1) = temp1(l).*(Theta2(l)-a3(k)).*2*(X(k,i)-x_aver(l,i))./sigma(l,i).^2;
-            temp2(l,i*2) = temp1(l).*(Theta2(l)-a3(k)).*2*(X(k,i)-x_aver(l,i)).^2./sigma(l,i).^3;
+            temp2(l,i*2-1) = 2*(X(k,i)-x_aver(l,i))./sigma(l,i).^2;
+            temp2(l,i*2) = 2*(X(k,i)-x_aver(l,i)).^2./sigma(l,i).^3;
         end
+%         if a2(k,l) ~= 0
+            temp2(l,:) = z2(k,l).*temp2(l,:).*temp1(l).*(Theta2(l)-a3(k));%.*sigmoidGradient(z2(k,l));
+%         end
+%         if max(a2(k,:)) > 0
+            temp1(l) = temp1(l).*a2(k,l);
+%         else
+%             temp1(l)=a3(k)-y(k);
+%         end
     end
     Delta1 = Delta1 + temp2;
     Delta2 = Delta2 + temp1;
