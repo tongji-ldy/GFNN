@@ -22,12 +22,12 @@ x_aver = Theta1(:,1:2:end);
 sigma = Theta1(:,2:2:end);
 
 z2 = zeros(m,hidden_layer_size);
-theta_rule = 0;
+theta_rule = 0.2;
 a2 = zeros(m,hidden_layer_size);
 for i=1:m
     for j=1:hidden_layer_size
         z2(i,j) = prod(exp(-(a1(i,:)-x_aver(j,:)).^2./sigma(j,:).^2),2);
-        if z2(i,j)-theta_rule>=0
+        if z2(i,j)-theta_rule >= 0
             a2(i,j) = z2(i,j);
         end
     end
@@ -64,14 +64,19 @@ for k=1:m
             temp2(l,i*2-1) = 2*(X(k,i)-x_aver(l,i))./sigma(l,i).^2;
             temp2(l,i*2) = 2*(X(k,i)-x_aver(l,i)).^2./sigma(l,i).^3;
         end
-%         if a2(k,l) ~= 0
+        if a2(k,l) ~= 0
             temp2(l,:) = z2(k,l).*temp2(l,:).*temp1(l).*(Theta2(l)-a3(k));%.*sigmoidGradient(z2(k,l));
-%         end
-%         if max(a2(k,:)) > 0
+        else
+            temp2(l,:) = 0;
+        end
+        [M, index] = max(a2(k,:));
+        if M > 0
             temp1(l) = temp1(l).*a2(k,l);
-%         else
-%             temp1(l)=a3(k)-y(k);
-%         end
+        elseif l == index
+            temp1(l) = a3(k)-y(k);
+        else
+            temp1(l) = 0;
+        end
     end
     Delta1 = Delta1 + temp2;
     Delta2 = Delta2 + temp1;
