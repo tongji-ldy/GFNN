@@ -22,7 +22,7 @@ x_aver = Theta1(:,1:2:end);
 sigma = Theta1(:,2:2:end);
 
 z2 = zeros(m,hidden_layer_size);
-theta_rule = 0.2;
+theta_rule = 0.1;
 a2 = zeros(m,hidden_layer_size);
 for i=1:m
     for j=1:hidden_layer_size

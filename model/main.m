@@ -1,12 +1,12 @@
-%% Machine Learning - Neural Network
-%  BP网络拟合函数matlab实现
+%% GFNN - REGRESSION
+%  GFNN拟合函数matlab实现
 
 %% Initialization
 clear ; close all; clc
 
-%% Setup the parameters you will use for this exercise
+%% Setup the parameters
 input_layer_size  = 2;    % 输入层神经元数量
-hidden_layer_size = 50;   % 隐含层神经元数量
+hidden_layer_size = 30;   % 隐含层神经元数量
 output_layer_size = 1;    % 输出层神经元数量
 trainRatio = 0.7;         % 训练集比例
 valRatio = 0.15;          % 验证集比例
@@ -60,7 +60,7 @@ pause;
 fprintf('\nTraining Neural Network... \n')
 
 %  传播迭代次数
-options = optimset('MaxIter', 5000);
+options = optimset('MaxIter', 10000);
 
 %  正则化参数
 lambda =0;
