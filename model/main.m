@@ -6,7 +6,7 @@ clear ; close all; clc
 
 %% Setup the parameters
 input_layer_size  = 2;    % 输入层神经元数量
-hidden_layer_size = 30;   % 隐含层神经元数量
+hidden_layer_size = 50;   % 隐含层神经元数量
 output_layer_size = 1;    % 输出层神经元数量
 trainRatio = 0.7;         % 训练集比例
 valRatio = 0.15;          % 验证集比例
@@ -41,9 +41,9 @@ fprintf('\nInitializing Neural Network Parameters ...\n')
 initial_Theta1 = randInitializeWeights(input_layer_size*2, hidden_layer_size);
 initial_Theta2 = randInitializeWeights(hidden_layer_size, output_layer_size);
 
-initial_Theta1(:,1) = mean(Xn_train(:,1));
-initial_Theta1(:,3) = mean(Xn_train(:,2));
-initial_Theta1(:,2:2:end) = 0.8;%初始高斯函数宽度
+% initial_Theta1(:,1) = mean(Xn_train(:,1));
+% initial_Theta1(:,3) = mean(Xn_train(:,2));
+% initial_Theta1(:,2:2:end) = 0.8;%初始高斯函数宽度
 
 %% =============== Part 3: Check Gradients ===============
 
@@ -62,19 +62,20 @@ fprintf('\nTraining Neural Network... \n')
 %  传播迭代次数
 options = optimset('MaxIter', 10000);
 
-%  正则化参数
+%  正则化及匹配度参数
 lambda =0;
+theta_rule = 0.4;
 
 % Create "short hand" for the cost function to be minimized
-costFunction = @(p1, p2, p3) nnCostFunction(p1, p2, input_layer_size, p3, ...
-                                        output_layer_size, Xn_train, yn_train, lambda);
+costFunction = @(p1, p2, p3, p4, p5, p6) nnCostFunction(p1, p2, input_layer_size, p3, ...
+                                        output_layer_size, p4, p5, lambda, p6);
 
 %optimization method1:fmincg
 %[nn_params, cost] = fmincg(costFunction, initial_nn_params, options);
 
 %optimization method2:gradientDesent
 [Theta1, Theta2, cost] = gradientDescent(costFunction, initial_Theta1, initial_Theta2, ...
-                                         hidden_layer_size, options, Xn_train, yn_train);
+                                         hidden_layer_size, options, Xn_train, yn_train, theta_rule);
 
 fprintf('Program paused. Press enter to continue.\n');
 pause;
@@ -102,7 +103,7 @@ plot(y(testInd,:),'-*');
 
 legend('预测输出','期望输出')
 
-title('BP网络预测输出','fontsize',12)
+title('GFNN预测输出','fontsize',12)
 
 ylabel('函数输出','fontsize',12)
 
@@ -115,7 +116,7 @@ figure(2)
 
 plot(error,'-*')
 
-title('BP网络预测误差','fontsize',12)
+title('GFNN预测误差','fontsize',12)
 
 ylabel('误差','fontsize',12)
 

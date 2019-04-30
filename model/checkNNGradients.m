@@ -15,6 +15,7 @@ end
 input_layer_size = 2;
 hidden_layer_size = 50;
 num_labels = 1;
+theta_rule = 0.4;
 m = 5;
 
 % We generate some 'random' test data
@@ -26,7 +27,7 @@ y  = 1 + mod(1:m, num_labels)';
 
 % Short hand for cost function
 costFunc = @(p1, p2) nnCostFunction(p1, p2, input_layer_size, hidden_layer_size, ...
-                               num_labels, X, y, lambda);
+                               num_labels, X, y, lambda, theta_rule);
 
 [~, Theta1_grad, Theta2_grad, ~] = costFunc(Theta1, Theta2);
 grad = [Theta1_grad(:) ; Theta2_grad(:)];
