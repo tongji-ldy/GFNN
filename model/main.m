@@ -60,7 +60,7 @@ pause;
 fprintf('\nTraining Neural Network... \n')
 
 %  传播迭代次数
-options = optimset('MaxIter', 10000);
+options = optimset('MaxIter', 5000);
 
 %  正则化及匹配度参数
 lambda =0;
