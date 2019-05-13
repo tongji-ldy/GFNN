@@ -4,8 +4,8 @@ function [ Theta1, Theta2, Theta1_grad, Theta2_grad, hidden_layer_size, theta_ru
 %UNTITLED 此处显示有关此函数的摘要
 %   此处显示详细说明
 
-delta_lamda = 0.01;
-delta_theta = 0.01;
+delta_lamda = 0.001;
+delta_theta = 0.001;
 flag = true;
 
 if flag
@@ -39,7 +39,7 @@ if flag
                 Theta2(index) = y;
             end
         end
-        if sum(M)/size(z2,1) < theta_rule
+        if sum(M)/size(z2,1) < lamda_rule%theta_rule
             %增加神经元
             if hidden_layer_size < 100
                 Theta1_add = [mean(X(:,1)), 0.8, mean(X(:,2)), 0.8];

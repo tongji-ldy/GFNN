@@ -11,7 +11,7 @@ W = zeros(L_out, L_in);
 % Initialize W randomly to break the symmetry while
 % training the neural network.
 
-epsilon_init = 0.3;
+epsilon_init = 10;%0.5;
 W = rand(L_out, L_in) * 2 * epsilon_init - epsilon_init;
 
 end

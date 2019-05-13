@@ -6,7 +6,7 @@ clear ; close all; clc
 
 %% Setup the parameters
 input_layer_size  = 2;    % 输入层神经元数量
-hidden_layer_size = 50;   % 隐含层神经元数量
+hidden_layer_size = 30;   % 隐含层神经元数量
 output_layer_size = 1;    % 输出层神经元数量
 trainRatio = 0.7;         % 训练集比例
 valRatio = 0.15;          % 验证集比例
@@ -60,7 +60,7 @@ pause;
 fprintf('\nTraining Neural Network... \n')
 
 %  传播迭代次数
-options = optimset('MaxIter', 5000);
+options = optimset('MaxIter', 5);
 
 %  正则化及匹配度参数
 lambda =0;
